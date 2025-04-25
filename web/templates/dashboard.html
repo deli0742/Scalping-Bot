@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Crypto Bot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/static/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
+                                <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#strategy" data-bs-toggle="tab">
+                                <i class="bi bi-diagram-3 me-2"></i>Stratejiler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#analytics" data-bs-toggle="tab">
+                                <i class="bi bi-graph-up me-2"></i>Analizler
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#backtest" data-bs-toggle="tab">
+                                <i class="bi bi-clipboard-data me-2"></i>Backtest
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#settings" data-bs-toggle="tab">
+                                <i class="bi bi-gear me-2"></i>Ayarlar
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="mt-4 p-3 bg-secondary rounded">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-white">Bot Durumu:</span>
+                            <span id="bot-status" class="badge bg-danger">DURDURULDU</span>
+                        </div>
+                        <button id="start-bot" class="btn btn-success btn-sm w-100 mb-2">
+                            <i class="bi bi-play-fill"></i> Başlat
+                        </button>
+                        <button id="stop-bot" class="btn btn-danger btn-sm w-100">
+                            <i class="bi bi-stop-fill"></i> Durdur
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="tab-content">
+                    <!-- Dashboard Tab -->
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Scalping Bot Kontrol Paneli</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <div class="btn-group me-2">
+                                    <select id="symbol-select" class="form-select form-select-sm">
+                                        <option value="BTC/USDT">BTC/USDT</option>
+                                        <option value="ETH/USDT">ETH/USDT</option>
+                                        <option value="SOL/USDT">SOL/USDT</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Real-time Stats -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card text-white bg-primary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Anlık Fiyat</h6>
+                                        <h2 id="current-price" class="card-text">$0.00</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title">24h Değişim</h6>
+                                        <h2 id="price-change" class="card-text">0.00%</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-info">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Son Sinyal</h6>
+                                        <h2 id="last-signal" class="card-text">NÖTR</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-warning">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Makro Skor</h6>
+                                        <h2 id="macro-score" class="card-text">0.0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charts Row -->
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="bi bi-graph-up me-2"></i>Fiyat ve Sinyaller
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="price-chart" style="height: 300px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="bi bi-pie-chart me-2"></i>Dağılım
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="distribution-chart" style="height: 300px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trades Table -->
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-list-ul me-2"></i>Son İşlemler
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Tarih</th>
+                                                <th>Sembol</th>
+                                                <th>Tür</th>
+                                                <th>Fiyat</th>
+                                                <th>Miktar</th>
+                                                <th>Toplam</th>
+                                                <th>Durum</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="trades-table">
+                                            <!-- Trades will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other tabs would go here -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

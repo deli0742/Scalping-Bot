@@ -1,0 +1,108 @@
+{
+  "environment": {
+    "mode": "production",
+    "log_level": "INFO",
+    "debug": false,
+    "max_threads": 4,
+    "data_refresh_interval": 300
+  },
+  "execution": {
+    "order_type": "hybrid",
+    "slippage_control": {
+      "enabled": true,
+      "max_slippage": 0.001
+    },
+    "latency_compensation": {
+      "enabled": true,
+      "delay_ms": 150
+    },
+    "smart_order_routing": {
+      "enabled": true,
+      "prefer_liquidity": true,
+      "min_liquidity_usd": 50000
+    }
+  },
+  "risk_management": {
+    "global_limits": {
+      "max_daily_loss_pct": 5.0,
+      "max_position_pct": 15.0,
+      "max_leverage": 10,
+      "blacklist": ["MEME/USDT", "SHIB/USDT"]
+    },
+    "circuit_breakers": {
+      "market_crash": {
+        "enabled": true,
+        "threshold_pct": -10.0,
+        "action": "close_all"
+      },
+      "liquidation_risk": {
+        "enabled": true,
+        "margin_pct": 20.0,
+        "action": "reduce_50"
+      }
+    }
+  },
+  "data": {
+    "storage": {
+      "ohlcv": {
+        "enabled": true,
+        "format": "parquet",
+        "path": "./data/ohlcv"
+      },
+      "orderbook": {
+        "enabled": false,
+        "depth": 10,
+        "snapshot_interval": 60
+      }
+    },
+    "providers": {
+      "primary": "ccxt",
+      "fallback": "cryptocompare",
+      "retry_policy": {
+        "max_retries": 3,
+        "backoff_factor": 1.5
+      }
+    }
+  },
+  "monitoring": {
+    "health_checks": {
+      "interval": 60,
+      "timeout": 5
+    },
+    "alerting": {
+      "email": {
+        "enabled": true,
+        "recipients": ["alerts@yourdomain.com"],
+        "triggers": ["error", "liquidations"]
+      },
+      "telegram": {
+        "enabled": false,
+        "bot_token": "YOUR_BOT_TOKEN",
+        "chat_id": "YOUR_CHAT_ID"
+      }
+    },
+    "metrics": {
+      "prometheus": {
+        "enabled": true,
+        "port": 9090
+      }
+    }
+  },
+  "backtesting": {
+    "warmup_period": 200,
+    "commission_model": "percentage",
+    "slippage_model": "random",
+    "benchmark": "BTC/USDT"
+  },
+  "api": {
+    "rest": {
+      "enabled": true,
+      "port": 8080,
+      "rate_limit": "100/minute"
+    },
+    "websocket": {
+      "enabled": true,
+      "max_reconnects": 5
+    }
+  }
+}

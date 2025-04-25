@@ -1,0 +1,54 @@
+{
+  "binance": {
+    "api_key": "YOUR_API_KEY",
+    "secret": "YOUR_SECRET_KEY",
+    "enableRateLimit": true,
+    "options": {
+      "defaultType": "future",
+      "adjustForTimeDifference": true,
+      "hedgeMode": false
+    },
+    "timeframes": {
+      "1m": "1m",
+      "5m": "5m",
+      "15m": "15m",
+      "1h": "1h",
+      "4h": "4h",
+      "1d": "1d"
+    },
+    "rateLimits": {
+      "tier": 2,
+      "candles": 20,
+      "orders": 50
+    },
+    "symbols": ["BTC/USDT", "ETH/USDT", "SOL/USDT"]
+  },
+  "binance_testnet": {
+    "api_key": "TESTNET_API_KEY",
+    "secret": "TESTNET_SECRET",
+    "enableRateLimit": true,
+    "urls": {
+      "api": {
+        "public": "https://testnet.binance.vision/api",
+        "private": "https://testnet.binance.vision/api"
+      }
+    }
+  },
+  "bybit": {
+    "api_key": "YOUR_API_KEY",
+    "secret": "YOUR_SECRET_KEY",
+    "options": {
+      "defaultType": "swap"
+    }
+  },
+  "ftx": {
+    "api_key": "YOUR_API_KEY",
+    "secret": "YOUR_SECRET_KEY",
+    "subaccount": "TradingBot"
+  },
+  "backtest": {
+    "initial_balance": 10000,
+    "commission": 0.0004,
+    "slippage": 0.0005
+  }
+}

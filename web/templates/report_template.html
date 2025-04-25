@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ strategy_name }} - Backtest Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+        .metric-card { border: 1px solid #ddd; padding: 15px; border-radius: 5px; text-align: center; }
+        .metric-value { font-size: 24px; font-weight: bold; }
+        .metric-label { color: #666; }
+        .trades-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .trades-table th, .trades-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .trades-table tr:nth-child(even) { background-color: #f2f2f2; }
+        .positive { color: green; }
+        .negative { color: red; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ strategy_name }} Backtest Report</h1>
+        <p>Generated on {{ date }}</p>
+    </div>
+    
+    <div class="metrics">
+        <div class="metric-card">
+            <div class="metric-value">{{ "%.2f%%"|format(metrics.total_return*100) }}</div>
+            <div class="metric-label">Total Return</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">{{ "%.2f"|format(metrics.sharpe_ratio) }}</div>
+            <div class="metric-label">Sharpe Ratio</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">{{ "%.2f%%"|format(metrics.win_rate*100) }}</div>
+            <div class="metric-label">Win Rate</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">{{ "%.2f%%"|format(metrics.max_drawdown*100) }}</div>
+            <div class="metric-label">Max Drawdown</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">{{ "%.2f"|format(metrics.profit_factor) }}</div>
+            <div class="metric-label">Profit Factor</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value">{{ metrics.total_trades }}</div>
+            <div class="metric-label">Total Trades</div>
+        </div>
+    </div>
+    
+    <h2>Recent Trades</h2>
+    <table class="trades-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Entry</th>
+                <th>Exit</th>
+                <th>PnL</th>
+                <th>Return</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trade in trades %}
+            <tr>
+                <td>{{ trade.entry_time }}</td>
+                <td>{{ trade.type|upper }}</td>
+                <td>{{ "%.2f"|format(trade.entry_price) }}</td>
+                <td>{{ "%.2f"|format(trade.exit_price) }}</td>
+                <td class="{{ 'positive' if trade.pnl > 0 else 'negative' }}">
+                    {{ "%.2f"|format(trade.pnl) }}
+                </td>
+                <td class="{{ 'positive' if trade.pnl > 0 else 'negative' }}">
+                    {{ "%.2f%%"|format(trade.return_pct*100) }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
